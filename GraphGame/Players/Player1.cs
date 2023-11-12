@@ -4,26 +4,30 @@ namespace GraphGame.Players;
 
 public class Player1
 {
+    private double _probabilityToGoDown;
+    private const double _probabilityToStay = 0.1f;
     private double _probabilityToGoUp;
-    private double _probabilityToStay;
-
-    public Player1(double probabilityToGoUp, double probabilityToStay)
+    public Player1(double probabilityToGoDown)
     {
-        _probabilityToStay = probabilityToStay;
-        _probabilityToGoUp = probabilityToGoUp;
+        _probabilityToGoDown = probabilityToGoDown;
     }
 
     public Move GenerateAClue(bool possibleToStay)
     {
         Random random = new Random();
         double randomValue = random.NextDouble();
-        
-        if (possibleToStay && randomValue > _probabilityToGoUp &&
-            randomValue <= _probabilityToStay + _probabilityToGoUp)
-            return Move.STAY;
-        
-        return randomValue <= _probabilityToGoUp
-            ? Move.UP
-            : Move.DOWN;
+
+        if (randomValue < _probabilityToGoDown)
+        {
+            return Move.DOWN;
+        }
+        else if (randomValue < _probabilityToGoDown + _probabilityToStay)
+        {
+            return possibleToStay ? Move.STAY : Move.UP;
+        }
+        else
+        {
+            return Move.UP;
+        }
     }
 }
